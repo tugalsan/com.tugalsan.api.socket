@@ -32,7 +32,7 @@ public class TS_SocketClient {
         queue.offer(line);
     }
 
-    public void start() {
+    public TS_SocketClient start() {
         TGS_UnSafe.run(() -> {
             try (var socket = new Socket("localhost", port)) {
                 var out = new PrintWriter(socket.getOutputStream(), true);
@@ -49,5 +49,6 @@ public class TS_SocketClient {
                 }
             }
         }, e -> e.printStackTrace());
+        return this;
     }
 }

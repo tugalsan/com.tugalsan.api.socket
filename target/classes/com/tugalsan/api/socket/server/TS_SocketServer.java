@@ -23,7 +23,7 @@ public class TS_SocketServer {
     final public int port;
     final public TGS_CallableType1<String, String> forEachReceivedLine;
 
-    public void start() {
+    public TS_SocketServer start() {
         TGS_UnSafe.run(() -> {
             try (var server = new ServerSocket(port)) {
                 server.setReuseAddress(true);
@@ -50,5 +50,6 @@ public class TS_SocketServer {
                 }
             }
         }, e -> e.printStackTrace());
+        return this;
     }
 }
