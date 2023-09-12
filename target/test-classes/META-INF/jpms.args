@@ -1,0 +1,6 @@
+--add-modules
+jdk.incubator.vector
+--patch-module
+com.tugalsan.api.socket=_
+--add-reads
+com.tugalsan.api.socket=ALL-UNNAMED
