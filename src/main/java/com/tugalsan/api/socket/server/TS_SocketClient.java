@@ -1,15 +1,17 @@
 package com.tugalsan.api.socket.server;
 
+import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.runnable.client.TGS_RunnableType1;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.TS_ThreadWait;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TS_SocketClient {
+
+    final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
     private TS_SocketClient(TS_ThreadSyncTrigger killTrigger, int port, TGS_RunnableType1<String> onReply) {
         this.killTrigger = killTrigger;
@@ -33,22 +35,22 @@ public class TS_SocketClient {
     }
 
     public TS_SocketClient start() {
-        TGS_UnSafe.run(() -> {
-            try (var socket = new Socket("localhost", port)) {
-                var out = new PrintWriter(socket.getOutputStream(), true);
-                var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                while (killTrigger.hasNotTriggered()) {
-                    TS_ThreadWait.milliseconds20();
-                    var line = queue.poll();
-                    if (TGS_StringUtils.isNullOrEmpty(line)) {
-                        continue;
-                    }
-                    out.println(line);
-                    out.flush();
-                    onReply.run(in.readLine());
+        try (var socket = new Socket("localhost", port)) {
+            var out = new PrintWriter(socket.getOutputStream(), true);
+            var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            while (killTrigger.hasNotTriggered()) {
+                TS_ThreadWait.milliseconds20();
+                var line = queue.poll();
+                if (TGS_StringUtils.isNullOrEmpty(line)) {
+                    continue;
                 }
+                out.println(line);
+                out.flush();
+                onReply.run(in.readLine());
             }
-        }, e -> e.printStackTrace());
+        } catch (IOException ex) {
+            d.ct("start", ex);
+        }
         return this;
     }
 }
