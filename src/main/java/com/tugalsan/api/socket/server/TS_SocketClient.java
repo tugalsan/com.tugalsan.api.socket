@@ -1,7 +1,8 @@
 package com.tugalsan.api.socket.server;
 
+import com.tugalsan.api.callable.client.TGS_CallableType1Void;
 import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.api.runnable.client.TGS_RunnableType1;
+
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.TS_ThreadWait;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
@@ -13,17 +14,17 @@ public class TS_SocketClient {
 
     final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
-    private TS_SocketClient(TS_ThreadSyncTrigger killTrigger, int port, TGS_RunnableType1<String> onReply) {
+    private TS_SocketClient(TS_ThreadSyncTrigger killTrigger, int port, TGS_CallableType1Void<String> onReply) {
         this.killTrigger = killTrigger;
         this.port = port;
         this.onReply = onReply;
     }
     final public TS_ThreadSyncTrigger killTrigger;
     final public int port;
-    final public TGS_RunnableType1<String> onReply;
+    final public TGS_CallableType1Void<String> onReply;
     final private ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue();
 
-    public static TS_SocketClient of(TS_ThreadSyncTrigger killTrigger, int port, TGS_RunnableType1<String> onReply) {
+    public static TS_SocketClient of(TS_ThreadSyncTrigger killTrigger, int port, TGS_CallableType1Void<String> onReply) {
         return new TS_SocketClient(killTrigger, port, onReply);
     }
 
