@@ -42,7 +42,7 @@ public class TS_SocketClient {
             while (killTrigger.hasNotTriggered()) {
                 TS_ThreadWait.milliseconds20();
                 var line = queue.poll();
-                if (TGS_StringUtils.isNullOrEmpty(line)) {
+                if (TGS_StringUtils.cmn().isNullOrEmpty(line)) {
                     continue;
                 }
                 out.println(line);

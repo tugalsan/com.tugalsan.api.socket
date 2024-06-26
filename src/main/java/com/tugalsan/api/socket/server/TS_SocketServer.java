@@ -38,7 +38,7 @@ public class TS_SocketServer {
                             while (killTrigger.hasNotTriggered()) {
                                 TS_ThreadWait.milliseconds20();
                                 var line = in.readLine();
-                                if (TGS_StringUtils.isNullOrEmpty(line)) {
+                                if (TGS_StringUtils.cmn().isNullOrEmpty(line)) {
                                     continue;
                                 }
                                 out.println(forEachReceivedLine.call(line));
