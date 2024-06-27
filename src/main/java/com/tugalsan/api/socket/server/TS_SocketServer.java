@@ -1,6 +1,6 @@
 package com.tugalsan.api.socket.server;
 
-import com.tugalsan.api.callable.client.TGS_CallableType1;
+import com.tugalsan.api.function.client.TGS_Func_OutTyped_In1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.TS_ThreadWait;
@@ -12,18 +12,18 @@ public class TS_SocketServer {
 
     final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
-    private TS_SocketServer(TS_ThreadSyncTrigger killTrigger, int port, TGS_CallableType1<String, String> forEachReceivedLine) {
+    private TS_SocketServer(TS_ThreadSyncTrigger killTrigger, int port, TGS_Func_OutTyped_In1<String, String> forEachReceivedLine) {
         this.killTrigger = killTrigger;
         this.port = port;
         this.forEachReceivedLine = forEachReceivedLine;
     }
 
-    public static TS_SocketServer of(TS_ThreadSyncTrigger killTrigger, int port, TGS_CallableType1<String, String> forEachReceivedLine) {
+    public static TS_SocketServer of(TS_ThreadSyncTrigger killTrigger, int port, TGS_Func_OutTyped_In1<String, String> forEachReceivedLine) {
         return new TS_SocketServer(killTrigger, port, forEachReceivedLine);
     }
     final public TS_ThreadSyncTrigger killTrigger;
     final public int port;
-    final public TGS_CallableType1<String, String> forEachReceivedLine;
+    final public TGS_Func_OutTyped_In1<String, String> forEachReceivedLine;
 
     public TS_SocketServer start() {
         try (var server = new ServerSocket(port)) {
