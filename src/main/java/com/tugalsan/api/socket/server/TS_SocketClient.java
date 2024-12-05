@@ -5,10 +5,10 @@ import com.tugalsan.api.log.server.TS_Log;
 
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.TS_ThreadWait;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncLst;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TS_SocketClient {
 
@@ -22,17 +22,17 @@ public class TS_SocketClient {
     final public TS_ThreadSyncTrigger killTrigger;
     final public int port;
     final public TGS_Func_In1<String> onReply;
-    final private ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue();
+    final private TS_ThreadSyncLst<String> queue = TS_ThreadSyncLst.ofSlowRead();
 
     public static TS_SocketClient of(TS_ThreadSyncTrigger killTrigger, int port, TGS_Func_In1<String> onReply) {
         return new TS_SocketClient(killTrigger, port, onReply);
     }
 
-    public void addToQueue(String line) {
+    public void add(String line) {
         if (line == null) {
             return;
         }
-        queue.offer(line);
+        queue.add(line);
     }
 
     public TS_SocketClient start() {
@@ -41,7 +41,7 @@ public class TS_SocketClient {
             var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             while (killTrigger.hasNotTriggered()) {
                 TS_ThreadWait.milliseconds20();
-                var line = queue.poll();
+                var line = queue.popFirst();
                 if (TGS_StringUtils.cmn().isNullOrEmpty(line)) {
                     continue;
                 }
