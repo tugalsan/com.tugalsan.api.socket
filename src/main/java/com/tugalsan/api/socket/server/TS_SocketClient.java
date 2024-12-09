@@ -41,7 +41,7 @@ public class TS_SocketClient {
             var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             while (killTrigger.hasNotTriggered()) {
                 TS_ThreadWait.milliseconds20();
-                var line = queue.popFirst();
+                var line = queue.removeAndPopFirst();
                 if (TGS_StringUtils.cmn().isNullOrEmpty(line)) {
                     continue;
                 }
