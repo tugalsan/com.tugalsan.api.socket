@@ -1,9 +1,9 @@
 package com.tugalsan.api.socket.server;
 
-import com.tugalsan.api.function.client.TGS_Func_OutTyped_In1;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_OutTyped_In1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
-import com.tugalsan.api.thread.server.TS_ThreadWait;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncWait;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import java.io.*;
 import java.net.*;
@@ -12,31 +12,31 @@ public class TS_SocketServer {
 
     final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
-    private TS_SocketServer(TS_ThreadSyncTrigger killTrigger, int port, TGS_Func_OutTyped_In1<String, String> forEachReceivedLine) {
+    private TS_SocketServer(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTUCE_OutTyped_In1<String, String> forEachReceivedLine) {
         this.killTrigger = killTrigger;
         this.port = port;
         this.forEachReceivedLine = forEachReceivedLine;
     }
 
-    public static TS_SocketServer of(TS_ThreadSyncTrigger killTrigger, int port, TGS_Func_OutTyped_In1<String, String> forEachReceivedLine) {
+    public static TS_SocketServer of(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTUCE_OutTyped_In1<String, String> forEachReceivedLine) {
         return new TS_SocketServer(killTrigger, port, forEachReceivedLine);
     }
     final public TS_ThreadSyncTrigger killTrigger;
     final public int port;
-    final public TGS_Func_OutTyped_In1<String, String> forEachReceivedLine;
+    final public TGS_FuncMTUCE_OutTyped_In1<String, String> forEachReceivedLine;
 
     public TS_SocketServer start() {
         try (var server = new ServerSocket(port)) {
             server.setReuseAddress(true);
             while (killTrigger.hasNotTriggered()) {
-                TS_ThreadWait.milliseconds20();
+                TS_ThreadSyncWait.milliseconds20();
                 var clientSocket = server.accept();
 //                    System.out.println("client connected" + clientSocket.getInetAddress().getHostAddress());
                 Thread.startVirtualThread(() -> {
                     try (clientSocket) {
                         try (var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); var out = new PrintWriter(clientSocket.getOutputStream(), true)) {
                             while (killTrigger.hasNotTriggered()) {
-                                TS_ThreadWait.milliseconds20();
+                                TS_ThreadSyncWait.milliseconds20();
                                 var line = in.readLine();
                                 if (TGS_StringUtils.cmn().isNullOrEmpty(line)) {
                                     continue;
