@@ -15,11 +15,11 @@ public class TS_SocketClient {
     final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
     private TS_SocketClient(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTUCE_In1<String> onReply) {
-        this.killTrigger = TS_ThreadSyncTrigger.of(d.className, killTrigger);
+        this.killTrigger_wt = TS_ThreadSyncTrigger.of(d.className, killTrigger);
         this.port = port;
         this.onReply = onReply;
     }
-    final public TS_ThreadSyncTrigger killTrigger;
+    final public TS_ThreadSyncTrigger killTrigger_wt;
     final public int port;
     final public TGS_FuncMTUCE_In1<String> onReply;
     final private TS_ThreadSyncLst<String> queue = TS_ThreadSyncLst.ofSlowRead();
@@ -39,7 +39,7 @@ public class TS_SocketClient {
         try (var socket = new Socket("localhost", port)) {
             var out = new PrintWriter(socket.getOutputStream(), true);
             var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            while (killTrigger.hasNotTriggered()) {
+            while (killTrigger_wt.hasNotTriggered()) {
                 TS_ThreadSyncWait.milliseconds20();
                 var line = queue.removeAndPopFirst();
                 if (TGS_StringUtils.cmn().isNullOrEmpty(line)) {
