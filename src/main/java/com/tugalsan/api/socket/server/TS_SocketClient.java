@@ -1,6 +1,6 @@
 package com.tugalsan.api.socket.server;
 
-import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In1;
+import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTU_In1;
 import com.tugalsan.api.log.server.TS_Log;
 
 import com.tugalsan.api.string.client.TGS_StringUtils;
@@ -14,17 +14,17 @@ public class TS_SocketClient {
 
     final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
-    private TS_SocketClient(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTUCE_In1<String> onReply) {
+    private TS_SocketClient(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTU_In1<String> onReply) {
         this.killTrigger_wt = TS_ThreadSyncTrigger.of(d.className, killTrigger);
         this.port = port;
         this.onReply = onReply;
     }
     final public TS_ThreadSyncTrigger killTrigger_wt;
     final public int port;
-    final public TGS_FuncMTUCE_In1<String> onReply;
+    final public TGS_FuncMTU_In1<String> onReply;
     final private TS_ThreadSyncLst<String> queue = TS_ThreadSyncLst.ofSlowRead();
 
-    public static TS_SocketClient of(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTUCE_In1<String> onReply) {
+    public static TS_SocketClient of(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTU_In1<String> onReply) {
         return new TS_SocketClient(killTrigger, port, onReply);
     }
 
