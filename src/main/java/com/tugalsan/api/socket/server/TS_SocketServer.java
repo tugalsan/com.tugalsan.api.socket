@@ -13,7 +13,7 @@ public class TS_SocketServer {
     final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
     private TS_SocketServer(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTU_OutTyped_In1<String, String> forEachReceivedLine) {
-        this.killTrigger_wt = TS_ThreadSyncTrigger.of(d.className, killTrigger);
+        this.killTrigger_wt = TS_ThreadSyncTrigger.of(d.className(), killTrigger);
         this.port = port;
         this.forEachReceivedLine = forEachReceivedLine;
     }

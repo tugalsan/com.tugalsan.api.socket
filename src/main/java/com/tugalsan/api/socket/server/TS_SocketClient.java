@@ -15,7 +15,7 @@ public class TS_SocketClient {
     final private static TS_Log d = TS_Log.of(TS_SocketServer.class);
 
     private TS_SocketClient(TS_ThreadSyncTrigger killTrigger, int port, TGS_FuncMTU_In1<String> onReply) {
-        this.killTrigger_wt = TS_ThreadSyncTrigger.of(d.className, killTrigger);
+        this.killTrigger_wt = TS_ThreadSyncTrigger.of(d.className(), killTrigger);
         this.port = port;
         this.onReply = onReply;
     }
